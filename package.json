@@ -1,16 +1,12 @@
 {
-  "name": "reactjs-vite-tailwindcss-boilerplate",
+  "name": "workflow-canvas",
   "description": "This is a boilerplate build with Vite, React 18, TypeScript, Vitest, Testing Library, TailwindCSS 3, Eslint and Prettier.",
   "version": "0.1.0",
   "private": true,
   "author": {
-    "name": "João Paulo Moraes",
-    "email": "joaopaulomoraes@outlook.com",
-    "url": "https://github.com/joaopaulomoraes"
-  },
-  "bugs": {
-    "url": "https://github.com/joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate/issues",
-    "email": "joaopaulomoraes@outlook.com"
+    "name": "divasatanica",
+    "email": "koma.hunger@gmail.com",
+    "url": "https://github.com/divasatanica/workflow-canvas"
   },
   "scripts": {
     "dev": "vite",
@@ -22,6 +18,11 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@antv/g6": "^4.8.24",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.15",
+    "ahooks": "^3.7.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
