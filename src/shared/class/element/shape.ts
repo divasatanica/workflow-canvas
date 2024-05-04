@@ -12,7 +12,7 @@ class ShapeElementEntity implements IElementEntity {
   vision: BaseElementVisionLayer;
 
   constructor(name: string, type: ShapeType, options: IShapeOptions) {
-    this.data = new ShapeElementData(name, options.executorType);
+    this.data = new ShapeElementData(name);
     this.vision = new ShapeVisionLayer(this.data, options.visionInfo, options.ctx, type);
   }
 

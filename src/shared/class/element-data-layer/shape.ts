@@ -5,14 +5,16 @@ import { ElementExecutor, ExecutorType } from './executor';
 class ShapeElement extends BaseElementDataLayer {
   intakeConnections: ElementConnection[] = [];
   exhaustConnections: ElementConnection[] = [];
-  executor: ElementExecutor;
-  constructor(name: string, executorType: ExecutorType) {
+  executor: ElementExecutor | null = null;
+  constructor(name: string) {
     super('shape', name);
-    this.executor = new ElementExecutor(executorType);
   }
   connect(element: ShapeElement) {
     const connection = new ElementConnection(this, element);
     connection.build();
+  }
+  setExecutor(executor: ElementExecutor) {
+    this.executor = executor;
   }
 }
 

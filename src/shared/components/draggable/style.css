@@ -1,0 +1,18 @@
+.diamond-narrow {
+  width: 0;
+  height: 0;
+  border: 40px solid transparent;
+  border-bottom: 30px solid #000;
+  position: relative;
+  top: -40px;
+}
+.diamond-narrow:after {
+  content: '';
+  position: absolute;
+  left: -40px;
+  top: 30px;
+  width: 0;
+  height: 0;
+  border: 40px solid transparent;
+  border-top: 30px solid #000;
+}
