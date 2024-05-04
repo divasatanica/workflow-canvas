@@ -103,7 +103,7 @@ function App() {
                       x,
                       y,
                       size: [80, 60],
-                    })
+                    });
                     break;
                   }
                   case 'task': {
