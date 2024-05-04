@@ -9,7 +9,9 @@
     "url": "https://github.com/divasatanica/workflow-canvas"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "pnpm run dev-client & pnpm run dev-server",
+    "dev-server": "cd ./server && pnpm run dev",
+    "dev-client": "vite",
     "build": "tsc && vite build",
     "serve": "vite preview",
     "test": "vitest",

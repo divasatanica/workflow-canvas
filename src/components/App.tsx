@@ -9,12 +9,13 @@ import {
   store,
   updateOptionsOfNode,
 } from 'shared/store';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { Graph, IG6GraphEvent, INode } from '@antv/g6';
 import { Panel } from '../shared/components/panel';
 import { G6Stage } from 'shared/components/canvas-stage/g6';
 import { addItem, getGraphData, getGraphModel } from 'shared/utils/g6-util';
 import { renderEditPanel } from 'shared/components/panel/edit';
+import { SaveFlow } from 'api';
 
 function App() {
   const graphRef = useRef<Graph | null>(null);
@@ -134,7 +135,7 @@ function App() {
               <Button
                 size="large"
                 type="primary"
-                onClick={() => {
+                onClick={async () => {
                   const graphData = store.get(GraphDataAtom);
 
                   console.log('GraphData', graphData);
@@ -142,6 +143,14 @@ function App() {
                   const graphModel = getGraphModel(graphRef.current!);
 
                   console.log('GraphModel:', graphModel);
+
+                  const res = await SaveFlow({ flow: graphModel });
+
+                  if (res.code === 0) {
+                    message.success('Successfully saved!');
+                  } else {
+                    message.error(`Saving failed: ${res.message}`);
+                  }
                 }}
               >
                 Save
