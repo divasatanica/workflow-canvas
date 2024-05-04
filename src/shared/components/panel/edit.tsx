@@ -19,9 +19,10 @@ const EditPanel = create((props: IProps) => {
   const [formValue, setFormValue] = useState<any>({});
 
   useEffect(() => {
+    form.resetFields();
     form.setFieldsValue(options);
     update();
-  }, [options]);
+  }, [options, form, update]);
 
   const normalizedOptionsMeta = useMemo(() => {
     return optionsMeta;
@@ -39,7 +40,14 @@ const EditPanel = create((props: IProps) => {
     >
       <Form form={form} onChange={val => setFormValue(val)}>
         {normalizedOptionsMeta.map(item => {
-          return <Form.Item key={item.key} name={item.key} required={item.required} label={item.title}>
+          return <Form.Item rules={[{validator(rule, value, callback) {
+            if (item.required && (value == null || value === '')) {
+              callback(`${item.title} is required`);
+              return;
+            }
+
+            callback();
+          },}]} key={item.key} name={item.key} required={item.required} label={item.title}>
             <DynamicFormItem type={item.type} itemProps={item.itemProps} />
           </Form.Item>
         })}

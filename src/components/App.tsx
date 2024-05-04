@@ -1,12 +1,19 @@
 import { useCallback, useRef } from 'react';
 import { Provider as NiceModalProvider } from '@ebay/nice-modal-react';
 import { useAtom, Provider as JotaiProvider } from 'jotai';
-import { FormMetaAtom, GraphDataAtom, getBusinessTypeOfNode, getOptionsOfNode, store, updateOptionsOfNode } from 'shared/store';
+import {
+  FormMetaAtom,
+  GraphDataAtom,
+  getBusinessTypeOfNode,
+  getOptionsOfNode,
+  store,
+  updateOptionsOfNode,
+} from 'shared/store';
 import { Button } from 'antd';
 import { Graph, IG6GraphEvent, INode } from '@antv/g6';
 import { Panel } from '../shared/components/panel';
 import { G6Stage } from 'shared/components/canvas-stage/g6';
-import { getGraphData } from 'shared/utils/store-v2';
+import { addItem, getGraphData, getGraphModel } from 'shared/utils/g6-util';
 import { renderEditPanel } from 'shared/components/panel/edit';
 
 function App() {
@@ -42,7 +49,7 @@ function App() {
             options: foundOptions,
             onRemove: () => {
               graphRef.current?.removeItem(node);
-            }
+            },
           });
 
           // Save the model as configs for the node
@@ -52,8 +59,8 @@ function App() {
           graphRef.current.updateItem(node, {
             label: model.label,
           });
-        } catch {
-
+        } catch (e) {
+          console.error('Error:', e);
         } finally {
           console.log('Node:', node);
           if (!node.destroyed) {
@@ -72,25 +79,35 @@ function App() {
     <div className="relative overflow-hidden bg-white flex">
       <JotaiProvider store={store}>
         <NiceModalProvider>
-          <G6Stage width={1000} height={1000} ref={graphRef} onEvent={onEvent} />
+          <G6Stage
+            width={1000}
+            height={1000}
+            ref={graphRef}
+            onEvent={onEvent}
+          />
           <div
             className="relative box-border"
-            style={{ borderLeft: '1px solid #ddd', width: 'calc(100vw - 1000px)', paddingBottom: 72, height: '100vh' }}
+            style={{
+              borderLeft: '1px solid #ddd',
+              width: 'calc(100vw - 1000px)',
+              paddingBottom: 72,
+              height: '100vh',
+            }}
           >
             <Panel
               onShapeAdd={(type, x, y) => {
                 switch (type) {
                   case 'decision': {
-                    graphRef.current?.addItem('node', {
+                    addItem(graphRef.current!, {
                       type: 'diamond',
                       x,
                       y,
                       size: [80, 60],
-                    });
+                    })
                     break;
                   }
                   case 'task': {
-                    graphRef.current?.addItem('node', {
+                    addItem(graphRef.current!, {
                       type: 'rect',
                       x,
                       y,
@@ -99,7 +116,7 @@ function App() {
                     break;
                   }
                   case 'transformer': {
-                    graphRef.current?.addItem('node', {
+                    addItem(graphRef.current!, {
                       type: 'circle',
                       x,
                       y,
@@ -110,7 +127,10 @@ function App() {
                 }
               }}
             />
-            <section className="absolute m-4" style={{ bottom: 0, left: 0, right: 0, height: 40  }}>
+            <section
+              className="absolute m-4"
+              style={{ bottom: 0, left: 0, right: 0, height: 40 }}
+            >
               <Button
                 size="large"
                 type="primary"
@@ -118,6 +138,10 @@ function App() {
                   const graphData = store.get(GraphDataAtom);
 
                   console.log('GraphData', graphData);
+
+                  const graphModel = getGraphModel(graphRef.current!);
+
+                  console.log('GraphModel:', graphModel);
                 }}
               >
                 Save

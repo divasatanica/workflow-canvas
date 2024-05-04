@@ -6,5 +6,6 @@ export interface IFormItemConfig {
   title: string;
   required: boolean;
   itemProps: any;
+  dep?: [string, any];
 }
 

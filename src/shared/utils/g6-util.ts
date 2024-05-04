@@ -1,4 +1,4 @@
-import { GraphData, Graph, INode, IEdge } from '@antv/g6';
+import { GraphData, Graph, INode, IEdge, ModelConfig } from '@antv/g6';
 import { GraphDataAtom , store } from 'shared/store';
 
 export function getInitData() {
@@ -61,4 +61,29 @@ export function getGraphData(graph: Graph): IGraphData {
       }
     }),
   };
+}
+
+export function addItem(graph: Graph, model: ModelConfig) {
+  const { x, y, size, type } = model;
+  graph?.addItem('node', {
+    type,
+    x,
+    y,
+    size,
+    labelCfg: {
+      position: 'bottom',
+    },
+  });
+}
+
+export function getGraphModel(graph: Graph) {
+  const data = getGraphData(graph);
+
+  const result = {
+    nodes: data.nodes.map(item => item.getModel()),
+    edges: data.edges.map(item => item.getModel()),
+    form: data.form,
+  };
+
+  return result;
 }

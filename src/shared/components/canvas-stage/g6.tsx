@@ -1,6 +1,12 @@
 import G6, { Graph, IG6GraphEvent } from '@antv/g6';
-import { KeyboardEventHandler, forwardRef, useCallback, useImperativeHandle, useLayoutEffect, useRef } from 'react';
-import { getInitData } from 'shared/utils/store-v2';
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+} from 'react';
+import { getInitData } from 'shared/utils/g6-util';
 
 interface IProps {
   width: number;
@@ -28,7 +34,7 @@ export const G6Stage = forwardRef<Graph, IProps>((props, ref) => {
     };
     const onAfterRemoveItem = (e: IG6GraphEvent) => {
       onEvent('afterremoveitem', e);
-    }
+    };
     graph.on('nodeselectchange', onNodeSelectChange);
     graph.on('aftercreateedge', onAfterCreateEdge);
     graph.on('afteradditem', onAfterAddItem);
@@ -52,7 +58,7 @@ export const G6Stage = forwardRef<Graph, IProps>((props, ref) => {
       if (e.code.includes('Alt')) {
         isCreatingEdge.current = false;
       }
-    }
+    };
     window.addEventListener('keydown', keypressHandler);
     window.addEventListener('keyup', keyupHandler);
 
@@ -61,17 +67,22 @@ export const G6Stage = forwardRef<Graph, IProps>((props, ref) => {
       width,
       height,
       modes: {
-        default: ['zoom-canvas', 'drag-node', 'click-select', {
-          type: 'create-edge',
-          trigger: 'click',
-          key: 'alt',
-        }],
+        default: [
+          'zoom-canvas',
+          'drag-node',
+          'click-select',
+          {
+            type: 'create-edge',
+            trigger: 'click',
+            key: 'alt',
+          },
+        ],
       },
       defaultEdge: {
         style: {
-          endArrow: true,
-        }
-      }
+          endArrow: true
+        },
+      },
     });
     graphRef.current = graph;
     const initData = getInitData();
@@ -91,5 +102,5 @@ export const G6Stage = forwardRef<Graph, IProps>((props, ref) => {
 
   useImperativeHandle(ref, () => graphRef.current!);
 
-  return <div ref={containerRef} />
+  return <div ref={containerRef} />;
 });

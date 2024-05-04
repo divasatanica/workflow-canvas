@@ -2,7 +2,7 @@ import { atom, createStore } from 'jotai';
 import { GraphData, Graph, INode, IEdge } from '@antv/g6';
 import { DATA_TRANSFORMER_FORM_ITEM_CONFIGS, DECISION_FORM_ITEM_CONFIGS, TASK_FORM_ITEM_CONFIGS } from 'shared/constants';
 import { IFormItemConfig } from 'shared/types/form';
-import { IGraphData } from 'shared/utils/store-v2';
+import { IGraphData } from 'shared/utils/g6-util';
 
 export const store = createStore();
 
