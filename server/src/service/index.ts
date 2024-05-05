@@ -41,10 +41,28 @@ export const saveFlowService = async (flowData: any) => {
   }
 
   const result = {
-    id: uuid(),
     ...flowData,
+    id: uuid(),
   };
   await appendFile(csvPath, `${JSON.stringify(result)}\n`);
 
   return null;
+}
+
+export const listFlowService = async () => {
+  const csvPath = getDBFilePath('flow');
+
+  console.log('CSVPath:', csvPath);
+
+  if (!csvPath) {
+    return [];
+  }
+
+  const csvFile = (await readFile(csvPath, { encoding: 'utf-8' })).toString();
+
+  const recordList = csvFile.split('\n').filter(Boolean);
+  console.log('File:', csvFile, recordList);
+
+
+  return recordList.map(item => JSON.parse(item));
 }

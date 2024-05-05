@@ -7,6 +7,8 @@ import { IGraphData } from 'shared/utils/g6-util';
 export const store = createStore();
 
 export const GraphDataAtom = atom<IGraphData>({
+  id: '',
+  name: '',
   nodes: [],
   edges: [],
   form: [],

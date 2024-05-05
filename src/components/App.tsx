@@ -9,16 +9,19 @@ import {
   store,
   updateOptionsOfNode,
 } from 'shared/store';
-import { Button, message } from 'antd';
+import { Button, Space, message } from 'antd';
 import { Graph, IG6GraphEvent, INode } from '@antv/g6';
 import { Panel } from '../shared/components/panel';
 import { G6Stage } from 'shared/components/canvas-stage/g6';
-import { addItem, getGraphData, getGraphModel } from 'shared/utils/g6-util';
+import { IGraphData, addItem, getGraphData, getGraphModel, getInitData } from 'shared/utils/g6-util';
 import { renderEditPanel } from 'shared/components/panel/edit';
 import { SaveFlow } from 'api';
+import { renderFlowListModal } from 'shared/components/flow-list-modal';
+import { renderSaveModal } from 'shared/components/panel/save';
 
 function App() {
   const graphRef = useRef<Graph | null>(null);
+  const [graphData, setGraphData] = useAtom(GraphDataAtom);
   const [formMeta, __] = useAtom(FormMetaAtom);
   const onEvent = useCallback(async (type: string, e: IG6GraphEvent) => {
     console.log('onEvent', type, e, graphRef.current);
@@ -128,34 +131,91 @@ function App() {
                 }
               }}
             />
-            <section
+            <div
               className="absolute m-4"
-              style={{ bottom: 0, left: 0, right: 0, height: 40 }}
+              style={{ bottom: 0, left: 0, right: 0 }}
             >
-              <Button
-                size="large"
-                type="primary"
-                onClick={async () => {
-                  const graphData = store.get(GraphDataAtom);
+              <div>
+                <section>
+                  <span>ID: {graphData.id}</span>
+                </section>
+              </div>
+              <Space>
+                <Button
+                  size="large"
+                  type="primary"
+                  onClick={async () => {
+                    const newData: IGraphData = {
+                      id: '',
+                      name: '',
+                      edges: [],
+                      nodes: [],
+                      form: [],
+                    };
 
-                  console.log('GraphData', graphData);
+                    setGraphData(newData);
+                    store.set(GraphDataAtom, newData);
 
-                  const graphModel = getGraphModel(graphRef.current!);
+                    graphRef.current!.read(getInitData());
+                    const newGraphData = getGraphData(graphRef.current!);
+                    store.set(GraphDataAtom, newGraphData);
+                    setGraphData(newGraphData);
+                  }}
+                >
+                  New
+                </Button>
+                <Button
+                  size="large"
+                  type="primary"
+                  onClick={async () => {
+                    const graphData = store.get(GraphDataAtom);
+                    renderSaveModal({
+                      graphData: {
+                        id: graphData.id,
+                        name: graphData.name,
+                        ...getGraphModel(graphRef.current!)
+                      },
+                    });
+                  }}
+                >
+                  Save
+                </Button>
 
-                  console.log('GraphModel:', graphModel);
+                <Button
+                  size="large"
+                  type="default"
+                  onClick={async () => {
+                    const detail = await renderFlowListModal({});
 
-                  const res = await SaveFlow({ flow: graphModel });
-
-                  if (res.code === 0) {
-                    message.success('Successfully saved!');
-                  } else {
-                    message.error(`Saving failed: ${res.message}`);
-                  }
-                }}
-              >
-                Save
-              </Button>
-            </section>
+                    graphRef.current!.read({
+                      nodes: detail.nodes,
+                      edges: detail.edges,
+                    });
+                    store.set(GraphDataAtom, getGraphData(graphRef.current!));
+                    const fullData = {
+                      id: detail.id,
+                      name: detail.name,
+                      edges: graphRef.current!.getEdges(),
+                      nodes: graphRef.current!.getNodes(),
+                      form: detail.form,
+                    };
+                    store.set(GraphDataAtom, fullData);
+                    setGraphData(fullData);
+                  }}
+                >
+                  Load
+                </Button>
+                <Button
+                  size="large"
+                  type="default"
+                  onClick={async () => {
+                    console.log('Check:', getGraphData(graphRef.current!));
+                  }}
+                >
+                  Check
+                </Button>
+              </Space>
+            </div>
           </div>
         </NiceModalProvider>
       </JotaiProvider>

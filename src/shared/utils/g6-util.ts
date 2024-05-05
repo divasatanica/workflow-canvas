@@ -37,6 +37,8 @@ export function getInitData() {
 }
 
 export interface IGraphData {
+  id: string;
+  name: string;
   nodes: INode[];
   edges: IEdge[];
   form: Array<{
@@ -51,6 +53,8 @@ export function getGraphData(graph: Graph): IGraphData {
   const edges = graph.getEdges();
 
   return {
+    id: graphData.id,
+    name: graphData.name,
     nodes,
     edges,
     form: nodes.map(item => {

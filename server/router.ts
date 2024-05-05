@@ -1,10 +1,11 @@
 import Router from 'koa-router';
-import { getFlowById, saveFlow } from './src/controller';
+import { getFlowById, listFlow, saveFlow } from './src/controller';
 
 export const router = new Router();
 
 router.prefix('/workflow');
 
-router.get('/:id', getFlowById);
+router.get('/detail/:id', getFlowById);
 
-router.post('/save', saveFlow);
+router.post('/save', saveFlow)
+      .post('/list', listFlow);
