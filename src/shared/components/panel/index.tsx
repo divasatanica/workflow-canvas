@@ -1,7 +1,8 @@
 import { Collapse, CollapseProps } from 'antd';
-import { ExecutorType } from 'shared/class/element-data-layer/executor';
 import { DraggableCircle, DraggableDiamond, DraggableRect } from '../draggable';
 import { useMemo } from 'react';
+
+export type ExecutorType = 'task' | 'transformer' | 'decision';
 
 interface IProps {
   onShapeAdd: (type: ExecutorType, x: number, y: number) => void;

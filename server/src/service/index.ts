@@ -40,11 +40,29 @@ export const saveFlowService = async (flowData: any) => {
     await writeFile(csvPath, '', { encoding: 'utf-8', flag: 'a+' });
   }
 
-  const result = {
-    ...flowData,
-    id: uuid(),
-  };
-  await appendFile(csvPath, `${JSON.stringify(result)}\n`);
+  if (!flowData.id) {
+    const result = {
+      ...flowData,
+      id: uuid(),
+    };
+    await appendFile(csvPath, `${JSON.stringify(result)}\n`);
+  } else {
+
+    const csvFile = (await readFile(csvPath, { encoding: 'utf-8' })).toString();
+
+    const recordList = csvFile.split('\n').filter(Boolean);
+
+    for (let i = 0; i < recordList.length; i ++) {
+      const item = recordList[i];
+
+      if (item.includes(flowData.id)) {
+        recordList[i] = JSON.stringify(flowData);
+        break;
+      }
+    }
+
+    await writeFile(csvPath, recordList.join('\n'), { encoding: 'utf-8', flag: 'w+' });
+  }
 
   return null;
 }

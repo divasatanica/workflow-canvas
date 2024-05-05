@@ -70,7 +70,11 @@ export const G6Stage = forwardRef<Graph, IProps>((props, ref) => {
         default: [
           'zoom-canvas',
           'drag-node',
-          'click-select',
+          {
+            type: 'click-select',
+            selectEdge: true,
+            selectNode: true,
+          },
           {
             type: 'create-edge',
             trigger: 'click',
